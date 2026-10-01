@@ -4,7 +4,8 @@ const informations = {
         "Langue principale": navigator.language,
         "Langues préférées": navigator.languages.join(", "),
         "Calendrier": Intl.DateTimeFormat().resolvedOptions().calendar,
-        "Système de numération": Intl.NumberFormat().resolvedOptions().numberingSystem
+        "Système de numération":
+            Intl.NumberFormat().resolvedOptions().numberingSystem
     },
 
     "Navigateur": {
@@ -28,58 +29,90 @@ const informations = {
         "Thème": window.matchMedia("(prefers-color-scheme: dark)").matches
             ? "sombre"
             : "clair",
-        "Animations réduites": window.matchMedia("(prefers-reduced-motion: reduce)").matches
-            ? "oui"
-            : "non"
+
+        "Animations réduites":
+            window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                ? "oui"
+                : "non"
     },
 
     "Matériel": {
-        "Cœurs du processeur": navigator.hardwareConcurrency || "non disponible",
-        "Mémoire approximative": navigator.deviceMemory
-            ? `≈ ${navigator.deviceMemory} Go`
-            : "non disponible",
-        "WebGL": "WebGL" in document.createElement("canvas")
-            ? "oui"
-            : "non"
+        "Cœurs du processeur":
+            navigator.hardwareConcurrency || "non disponible",
+
+        "Mémoire approximative":
+            navigator.deviceMemory
+                ? `≈ ${navigator.deviceMemory} Go`
+                : "non disponible",
+
+        "WebGL":
+            "WebGL" in document.createElement("canvas")
+                ? "oui"
+                : "non"
     },
 
     "Connexion": {
-        "Type": navigator.connection?.effectiveType || "non disponible",
-        "Débit estimé": navigator.connection?.downlink
-            ? `${navigator.connection.downlink} Mb/s`
-            : "non disponible",
-        "Latence estimée": navigator.connection?.rtt
-            ? `${navigator.connection.rtt} ms`
-            : "non disponible",
-        "Économiseur de données": navigator.connection?.saveData
-            ? "oui"
-            : "non"
+        "Type":
+            navigator.connection?.effectiveType || "non disponible",
+
+        "Débit estimé":
+            navigator.connection?.downlink
+                ? `${navigator.connection.downlink} Mb/s`
+                : "non disponible",
+
+        "Latence estimée":
+            navigator.connection?.rtt
+                ? `${navigator.connection.rtt} ms`
+                : "non disponible",
+
+        "Économiseur de données":
+            navigator.connection?.saveData
+                ? "oui"
+                : "non"
     },
 
     "Capacités": {
-        "Géolocalisation": "geolocation" in navigator
-            ? "disponible"
-            : "non disponible",
-        "Notifications": "Notification" in window
-            ? "disponible"
-            : "non disponible",
-        "Caméra et micro": navigator.mediaDevices
-            ? "disponibles"
-            : "non disponibles",
-        "Presse-papiers": navigator.clipboard
-            ? "disponible"
-            : "non disponible",
-        "Bluetooth": "bluetooth" in navigator
-            ? "disponible"
-            : "non disponible",
-        "Stockage local": "localStorage" in window
-            ? "disponible"
-            : "non disponible",
-        "IndexedDB": "indexedDB" in window
-            ? "oui"
-            : "non"
+        "Géolocalisation":
+            "geolocation" in navigator
+                ? "disponible"
+                : "non disponible",
+
+        "Notifications":
+            "Notification" in window
+                ? "disponible"
+                : "non disponible",
+
+        "Caméra et micro":
+            navigator.mediaDevices
+                ? "disponibles"
+                : "non disponibles",
+
+        "Presse-papiers":
+            navigator.clipboard
+                ? "disponible"
+                : "non disponible",
+
+        "Bluetooth":
+            "bluetooth" in navigator
+                ? "disponible"
+                : "non disponible",
+
+        "Stockage local":
+            "localStorage" in window
+                ? "disponible"
+                : "non disponible",
+
+        "IndexedDB":
+            "indexedDB" in window
+                ? "oui"
+                : "non"
     }
 };
+
+
+// ======================================
+// AFFICHAGE DES INFORMATIONS
+// ======================================
 
 const conteneur = document.getElementById("informations");
 
@@ -112,31 +145,52 @@ for (const [categorie, donnees] of Object.entries(informations)) {
     }
 
     conteneur.appendChild(section);
+}
 
-    document.getElementById("localiser").addEventListener("click", () => {
-    const resultat = document.getElementById("position");
+
+// ======================================
+// GÉOLOCALISATION
+// ======================================
+
+const boutonLocaliser = document.getElementById("localiser");
+const resultat = document.getElementById("position");
+
+boutonLocaliser.addEventListener("click", () => {
 
     if (!navigator.geolocation) {
-        resultat.textContent = "La géolocalisation n'est pas disponible.";
+        resultat.textContent =
+            "❌ La géolocalisation n'est pas disponible.";
         return;
     }
 
-    resultat.textContent = "Demande d'autorisation de localisation...";
+    resultat.textContent =
+        "⏳ Demande d'autorisation de localisation...";
 
     navigator.geolocation.getCurrentPosition(
+
+        // Si la personne accepte
         (position) => {
+
             const latitude = position.coords.latitude;
             const longitude = position.coords.longitude;
 
             resultat.innerHTML = `
+                ✅ Localisation obtenue !<br><br>
                 Latitude : ${latitude.toFixed(5)}<br>
                 Longitude : ${longitude.toFixed(5)}
             `;
         },
-        () => {
-            resultat.textContent =
-                "Localisation refusée ou indisponible.";
+
+        // Si la personne refuse
+        (erreur) => {
+
+            if (erreur.code === 1) {
+                resultat.textContent =
+                    "❌ La permission de localisation a été refusée.";
+            } else {
+                resultat.textContent =
+                    "❌ Impossible d'obtenir la localisation.";
+            }
         }
     );
 });
-}

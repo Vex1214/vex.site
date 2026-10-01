@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,13 +12,38 @@
 
     <header>
         <h1>Informations de mon navigateur</h1>
-        <p>Cette page affiche les informations que ton navigateur autorise à récupérer.</p>
+        <p>
+            Cette page affiche les informations que ton navigateur
+            autorise à récupérer.
+        </p>
     </header>
 
-    <main id="informations"></main>
+    <main>
 
+        <!-- Bouton de localisation -->
+        <section class="localisation">
+            <h2>📍 Localisation</h2>
+
+            <p>
+                Clique sur le bouton ci-dessous pour demander
+                l'autorisation d'utiliser ta localisation.
+            </p>
+
+            <button id="localiser">
+                📍 Afficher ma localisation
+            </button>
+
+            <p id="position"></p>
+        </section>
+
+        <!-- Informations du navigateur -->
+        <div id="informations"></div>
+
+    </main>
+
+    <!-- Le JavaScript est chargé APRÈS les éléments HTML -->
     <script src="script.js"></script>
+
 </body>
+
 </html>
-<button id="localiser">📍 Afficher ma localisation</button>
-<p id="position"></p>
