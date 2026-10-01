@@ -112,4 +112,31 @@ for (const [categorie, donnees] of Object.entries(informations)) {
     }
 
     conteneur.appendChild(section);
+
+    document.getElementById("localiser").addEventListener("click", () => {
+    const resultat = document.getElementById("position");
+
+    if (!navigator.geolocation) {
+        resultat.textContent = "La géolocalisation n'est pas disponible.";
+        return;
+    }
+
+    resultat.textContent = "Demande d'autorisation de localisation...";
+
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            resultat.innerHTML = `
+                Latitude : ${latitude.toFixed(5)}<br>
+                Longitude : ${longitude.toFixed(5)}
+            `;
+        },
+        () => {
+            resultat.textContent =
+                "Localisation refusée ou indisponible.";
+        }
+    );
+});
 }
